@@ -10,11 +10,11 @@ This project fulfills the [Cybership Carrier Integration Take-Home](https://deve
 
 **High-level layers (Client → Application → Carrier Abstraction → Implementations → Infrastructure):**
 
-![Layered architecture](system_design/big_diagram.png)
+![Layered architecture](diagrams/big_diagram.png)
 
 **UML class diagram (RateService, CarrierClient, UPSClient, mappers, auth, domain models):**
 
-![UML class diagram](system_design/class_diagram.png)
+![UML class diagram](diagrams/class_diagram.png)
 
 ---
 
@@ -57,7 +57,7 @@ Domain models (`RateRequest`, `RateQuote`, `Address`, `PackageDimensions`) live 
 ## Project structure
 
 ```
-system_design/              # Architecture diagrams
+diagrams/                   # Architecture diagrams
 ├── big_diagram.png         # Layered view (Client → … → Infrastructure)
 └── class_diagram.png       # UML: RateService, UPSClient, mappers, domain
 
