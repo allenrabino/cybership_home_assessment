@@ -1,8 +1,3 @@
-/**
- * UPS OAuth 2.0 client-credentials flow.
- * Token acquisition only; caching is handled by auth/token-cache.
- */
-
 import { CarrierIntegrationError } from "../../errors/index.js";
 import type { FetchFn } from "../../http/index.js";
 
@@ -21,10 +16,6 @@ export interface UpsTokenResponse {
   expires_in: number;
 }
 
-/**
- * Request a new access token from UPS OAuth endpoint.
- * Uses client_credentials grant with Basic auth per UPS docs.
- */
 export async function fetchUpsToken(
   config: UpsOAuthConfig,
   fetchFn: FetchFn

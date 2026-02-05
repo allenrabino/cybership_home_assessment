@@ -1,8 +1,3 @@
-/**
- * UPS HTTP client: OAuth + authenticated Rating API requests.
- * Injected fetch allows stubbing in tests.
- */
-
 import { CarrierIntegrationError } from "../../errors/index.js";
 import { errorFromResponse, type FetchFn } from "../../http/index.js";
 import type { UpsRateRequestPayload } from "./types.js";
@@ -11,7 +6,6 @@ export interface UpsClientConfig {
   baseUrl: string;
   getAccessToken: () => Promise<string>;
   timeoutMs: number;
-  /** For tests: inject a stub. Production uses fetchWithTimeout. */
   fetchFn: FetchFn;
 }
 
@@ -24,9 +18,6 @@ function trimTrailingSlash(url: string): string {
   return url.replace(/\/$/, "");
 }
 
-/**
- * Create a client that calls UPS Rating API with Bearer token and timeout.
- */
 export function createUpsClient(config: UpsClientConfig): {
   getRates: (body: UpsRateRequestPayload) => Promise<unknown>;
 } {

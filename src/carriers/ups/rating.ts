@@ -1,8 +1,3 @@
-/**
- * UPS Rating API: map domain RateRequest → UPS request, UPS response → RateQuote[].
- * All UPS-specific shapes stay in this module.
- */
-
 import { CarrierIntegrationError } from "../../errors/index.js";
 import type { RateRequest, RateQuote } from "../../types/domain.js";
 import type { UpsAddress, UpsRateRequestPayload, UpsRateResponsePayload } from "./types.js";
@@ -39,10 +34,6 @@ function toUpsAddress(
   };
 }
 
-/**
- * Build UPS Rating API request body from domain RateRequest.
- * Uses Shop (all services) when no serviceLevel; otherwise Rate with Service code.
- */
 export function buildUpsRateRequest(request: RateRequest): UpsRateRequestPayload {
   const { origin, destination, package: pkg } = request;
   const serviceLevel = request.serviceLevel?.trim();
@@ -98,10 +89,6 @@ export function buildUpsRateRequest(request: RateRequest): UpsRateRequestPayload
   };
 }
 
-/**
- * Parse UPS Rating API response into normalized RateQuote[].
- * Throws CarrierIntegrationError on malformed or error response.
- */
 export function parseUpsRateResponse(raw: unknown): RateQuote[] {
   if (raw === null || typeof raw !== "object") {
     throw new CarrierIntegrationError("UPS rate response is not an object", "MALFORMED_RESPONSE", undefined, raw);

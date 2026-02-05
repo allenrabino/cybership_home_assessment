@@ -1,0 +1,34 @@
+{
+  "RateResponse": {
+    "Response": {
+      "ResponseStatus": {
+        "Code": "1",
+        "Description": "Success"
+      }
+    },
+    "RatedShipment": [
+      {
+        "Service": {
+          "Code": "03",
+          "Description": "Ground"
+        },
+        "TotalCharge": {
+          "CurrencyCode": "USD",
+          "MonetaryValue": "12.45"
+        },
+        "BusinessDaysInTransit": 3
+      },
+      {
+        "Service": {
+          "Code": "01",
+          "Description": "Next Day Air"
+        },
+        "TotalCharge": {
+          "CurrencyCode": "USD",
+          "MonetaryValue": "28.90"
+        },
+        "BusinessDaysInTransit": 1
+      }
+    ]
+  }
+}

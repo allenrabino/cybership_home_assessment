@@ -1,8 +1,3 @@
-/**
- * UPS Rating API request/response shapes (from UPS API documentation).
- * Kept internal to this module; callers use domain types only.
- */
-
 export interface UpsAddress {
   AddressLine: string[];
   City: string;
@@ -43,7 +38,6 @@ export interface UpsRateRequestPayload {
   };
 }
 
-/** Known UPS service codes for optional Rate (single-service) request */
 export const UPS_SERVICE_CODES: Record<string, string> = {
   "01": "Next Day Air",
   "02": "2nd Day Air",
@@ -62,7 +56,6 @@ export const UPS_SERVICE_CODES: Record<string, string> = {
   "96": "Worldwide Express Freight",
 };
 
-/** Response shape (minimal for parsing) */
 export interface UpsRateResponsePayload {
   RateResponse?: {
     Response?: { ResponseStatus?: { Code?: string; Description?: string } };
