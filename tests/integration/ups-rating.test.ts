@@ -103,7 +103,8 @@ describe("UPS rating response parsing", () => {
       parseUpsRateResponse(null);
     } catch (e) {
       expect(e).toBeInstanceOf(CarrierIntegrationError);
-      expect((e as CarrierIntegrationError).code).toBe("MALFORMED_RESPONSE");
+      const err = e instanceof CarrierIntegrationError ? e : null;
+      expect(err?.code).toBe("MALFORMED_RESPONSE");
     }
     expect(() => parseUpsRateResponse("string")).toThrow(CarrierIntegrationError);
   });

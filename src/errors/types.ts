@@ -23,16 +23,25 @@ export interface CarrierIntegrationErrorPayload {
   details?: unknown;
 }
 
+export interface CarrierIntegrationErrorOptions {
+  message: string;
+  code: ErrorCode;
+  statusCode?: number;
+  details?: unknown;
+}
+
 /** Thrown when validation, auth, carrier, or network issues occur. */
 export class CarrierIntegrationError extends Error {
-  constructor(
-    message: string,
-    public readonly code: ErrorCode,
-    public readonly statusCode?: number,
-    public readonly details?: unknown
-  ) {
-    super(message);
+  public readonly code: ErrorCode;
+  public readonly statusCode?: number;
+  public readonly details?: unknown;
+
+  constructor(options: CarrierIntegrationErrorOptions) {
+    super(options.message);
     this.name = "CarrierIntegrationError";
+    this.code = options.code;
+    this.statusCode = options.statusCode;
+    this.details = options.details;
     Object.setPrototypeOf(this, CarrierIntegrationError.prototype);
   }
 

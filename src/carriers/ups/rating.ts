@@ -91,13 +91,21 @@ export function buildUpsRateRequest(request: RateRequest): UpsRateRequestPayload
 
 export function parseUpsRateResponse(raw: unknown): RateQuote[] {
   if (raw === null || typeof raw !== "object") {
-    throw new CarrierIntegrationError("UPS rate response is not an object", "MALFORMED_RESPONSE", undefined, raw);
+    throw new CarrierIntegrationError({
+      message: "UPS rate response is not an object",
+      code: "MALFORMED_RESPONSE",
+      details: raw,
+    });
   }
 
   const body = raw as Record<string, unknown>;
   const rateResponse = body.RateResponse as UpsRateResponsePayload["RateResponse"] | undefined;
   if (!rateResponse) {
-    throw new CarrierIntegrationError("UPS rate response missing RateResponse", "MALFORMED_RESPONSE", undefined, raw);
+    throw new CarrierIntegrationError({
+      message: "UPS rate response missing RateResponse",
+      code: "MALFORMED_RESPONSE",
+      details: raw,
+    });
   }
 
   const ratedShipments = rateResponse.RatedShipment;

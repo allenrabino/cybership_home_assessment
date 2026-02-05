@@ -39,33 +39,32 @@ export async function fetchUpsToken(
     } catch {
       bodySummary = undefined;
     }
-    throw new CarrierIntegrationError(
-      bodySummary ?? `UPS OAuth failed: ${res.status}`,
-      res.status === HTTP_UNAUTHORIZED ? "AUTH_FAILED" : "CARRIER_ERROR",
-      res.status,
-      { bodySummary }
-    );
+    throw new CarrierIntegrationError({
+      message: bodySummary ?? `UPS OAuth failed: ${res.status}`,
+      code: res.status === HTTP_UNAUTHORIZED ? "AUTH_FAILED" : "CARRIER_ERROR",
+      statusCode: res.status,
+      details: { bodySummary },
+    });
   }
 
   let data: unknown;
   try {
     data = await res.json();
   } catch {
-    throw new CarrierIntegrationError(
-      "UPS OAuth response was not valid JSON",
-      "MALFORMED_RESPONSE",
-      res.status,
-      undefined
-    );
+    throw new CarrierIntegrationError({
+      message: "UPS OAuth response was not valid JSON",
+      code: "MALFORMED_RESPONSE",
+      statusCode: res.status,
+    });
   }
 
   if (data === null || typeof data !== "object") {
-    throw new CarrierIntegrationError(
-      "UPS OAuth response missing token payload",
-      "MALFORMED_RESPONSE",
-      res.status,
-      data
-    );
+    throw new CarrierIntegrationError({
+      message: "UPS OAuth response missing token payload",
+      code: "MALFORMED_RESPONSE",
+      statusCode: res.status,
+      details: data,
+    });
   }
 
   const obj = data as Record<string, unknown>;
@@ -73,22 +72,22 @@ export async function fetchUpsToken(
   const expires_in = obj.expires_in;
 
   if (typeof access_token !== "string" || !access_token) {
-    throw new CarrierIntegrationError(
-      "UPS OAuth response missing access_token",
-      "MALFORMED_RESPONSE",
-      res.status,
-      data
-    );
+    throw new CarrierIntegrationError({
+      message: "UPS OAuth response missing access_token",
+      code: "MALFORMED_RESPONSE",
+      statusCode: res.status,
+      details: data,
+    });
   }
 
   const expiresInSeconds = typeof expires_in === "number" ? expires_in : Number(expires_in);
   if (Number.isNaN(expiresInSeconds) || expiresInSeconds <= 0) {
-    throw new CarrierIntegrationError(
-      "UPS OAuth response invalid expires_in",
-      "MALFORMED_RESPONSE",
-      res.status,
-      data
-    );
+    throw new CarrierIntegrationError({
+      message: "UPS OAuth response invalid expires_in",
+      code: "MALFORMED_RESPONSE",
+      statusCode: res.status,
+      details: data,
+    });
   }
 
   return { access_token, expires_in: expiresInSeconds };

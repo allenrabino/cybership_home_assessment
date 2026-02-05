@@ -33,17 +33,20 @@ export function fetchWithTimeout(
       return response;
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
-        throw new CarrierIntegrationError(
-          `Request timed out after ${timeoutMs}ms`,
-          "TIMEOUT",
-          undefined,
-          { url }
-        );
+        throw new CarrierIntegrationError({
+          message: `Request timed out after ${timeoutMs}ms`,
+          code: "TIMEOUT",
+          details: { url },
+        });
       }
       const message =
         err instanceof Error ? err.message || "Network request failed" : "Network request failed";
       const cause = err instanceof Error ? err : undefined;
-      throw new CarrierIntegrationError(message, "NETWORK_ERROR", undefined, { url, cause });
+      throw new CarrierIntegrationError({
+        message,
+        code: "NETWORK_ERROR",
+        details: { url, cause },
+      });
     } finally {
       clearTimeout(timeoutId);
     }
@@ -58,33 +61,33 @@ export function errorFromResponse(
   bodySummary?: string
 ): CarrierIntegrationError {
   if (status === HTTP_UNAUTHORIZED) {
-    return new CarrierIntegrationError(
-      bodySummary ?? `${CARRIER_LABEL} authentication failed`,
-      "AUTH_FAILED",
-      HTTP_UNAUTHORIZED,
-      bodySummary !== undefined ? { bodySummary } : undefined
-    );
+    return new CarrierIntegrationError({
+      message: bodySummary ?? `${CARRIER_LABEL} authentication failed`,
+      code: "AUTH_FAILED",
+      statusCode: HTTP_UNAUTHORIZED,
+      details: bodySummary !== undefined ? { bodySummary } : undefined,
+    });
   }
   if (status === HTTP_TOO_MANY_REQUESTS) {
-    return new CarrierIntegrationError(
-      bodySummary ?? `${CARRIER_LABEL} rate limit exceeded`,
-      "RATE_LIMITED",
-      HTTP_TOO_MANY_REQUESTS,
-      bodySummary !== undefined ? { bodySummary } : undefined
-    );
+    return new CarrierIntegrationError({
+      message: bodySummary ?? `${CARRIER_LABEL} rate limit exceeded`,
+      code: "RATE_LIMITED",
+      statusCode: HTTP_TOO_MANY_REQUESTS,
+      details: bodySummary !== undefined ? { bodySummary } : undefined,
+    });
   }
   if (status >= HTTP_CLIENT_ERROR_MIN && status <= HTTP_CLIENT_ERROR_MAX) {
-    return new CarrierIntegrationError(
-      bodySummary ?? `${CARRIER_LABEL} client error: ${status}`,
-      "CARRIER_ERROR",
-      status,
-      bodySummary !== undefined ? { bodySummary } : undefined
-    );
+    return new CarrierIntegrationError({
+      message: bodySummary ?? `${CARRIER_LABEL} client error: ${status}`,
+      code: "CARRIER_ERROR",
+      statusCode: status,
+      details: bodySummary !== undefined ? { bodySummary } : undefined,
+    });
   }
-  return new CarrierIntegrationError(
-    bodySummary ?? `${CARRIER_LABEL} server error: ${status}`,
-    "CARRIER_ERROR",
-    status,
-    bodySummary !== undefined ? { bodySummary } : undefined
-  );
+  return new CarrierIntegrationError({
+    message: bodySummary ?? `${CARRIER_LABEL} server error: ${status}`,
+    code: "CARRIER_ERROR",
+    statusCode: status,
+    details: bodySummary !== undefined ? { bodySummary } : undefined,
+  });
 }

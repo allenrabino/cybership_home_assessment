@@ -2,7 +2,8 @@ export {
   addressSchema,
   packageDimensionsSchema,
   rateRequestSchema,
-  type AddressInput,
-  type PackageDimensionsInput,
+  type Address,
+  type PackageDimensions,
+  type RateRequest,
   type RateRequestInput,
 } from "./schemas.js";

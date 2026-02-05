@@ -6,6 +6,7 @@ import { createRateService } from "../../src/service.js";
 import { createUpsCarrier } from "../../src/carriers/ups/index.js";
 import { CarrierIntegrationError } from "../../src/errors/index.js";
 import { fetchWithTimeout, type FetchFn } from "../../src/http/index.js";
+import type { RateRequestInput } from "../../src/validation/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const successFixture = JSON.parse(
@@ -36,7 +37,7 @@ const validRateRequest = {
 };
 
 describe("rate service validation", () => {
-  it("throws VALIDATION_ERROR for invalid request", async () => {
+  it("throws VALIDATION_ERROR for invalid request and exposes validation details", async () => {
     const service = createRateService({
       carriers: [
         createUpsCarrier({
@@ -48,10 +49,19 @@ describe("rate service validation", () => {
       ],
     });
 
-    await expect(service.getRates({ origin: "invalid" as never })).rejects.toThrow(CarrierIntegrationError);
-    await expect(service.getRates({ origin: "invalid" as never })).rejects.toMatchObject({
-      code: "VALIDATION_ERROR",
-    });
+    const invalidInput = { origin: "invalid" } as unknown as RateRequestInput;
+
+    await expect(service.getRates(invalidInput)).rejects.toThrow(CarrierIntegrationError);
+
+    try {
+      await service.getRates(invalidInput);
+    } catch (err) {
+      expect(err).toBeInstanceOf(CarrierIntegrationError);
+      const carrierErr = err instanceof CarrierIntegrationError ? err : null;
+      expect(carrierErr?.code).toBe("VALIDATION_ERROR");
+      expect(carrierErr?.details).toBeDefined();
+      expect(typeof carrierErr?.details).toBe("object");
+    }
   });
 });
 

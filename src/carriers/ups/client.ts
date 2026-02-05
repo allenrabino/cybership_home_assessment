@@ -48,24 +48,23 @@ export function createUpsClient(config: UpsClientConfig): {
       }
 
       if (!text.trim()) {
-        throw new CarrierIntegrationError(
-          "UPS rate response was empty",
-          "MALFORMED_RESPONSE",
-          res.status,
-          undefined
-        );
+        throw new CarrierIntegrationError({
+          message: "UPS rate response was empty",
+          code: "MALFORMED_RESPONSE",
+          statusCode: res.status,
+        });
       }
 
       let data: unknown;
       try {
         data = JSON.parse(text);
       } catch {
-        throw new CarrierIntegrationError(
-          "UPS rate response was not valid JSON",
-          "MALFORMED_RESPONSE",
-          res.status,
-          { raw: text.slice(0, MAX_RAW_SNIPPET_LENGTH) }
-        );
+        throw new CarrierIntegrationError({
+          message: "UPS rate response was not valid JSON",
+          code: "MALFORMED_RESPONSE",
+          statusCode: res.status,
+          details: { raw: text.slice(0, MAX_RAW_SNIPPET_LENGTH) },
+        });
       }
 
       return data;

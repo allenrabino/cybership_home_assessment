@@ -24,6 +24,7 @@ export const rateRequestSchema = z.object({
   serviceLevel: z.string().optional(),
 });
 
-export type AddressInput = z.infer<typeof addressSchema>;
-export type PackageDimensionsInput = z.infer<typeof packageDimensionsSchema>;
-export type RateRequestInput = z.infer<typeof rateRequestSchema>;
+export type Address = z.output<typeof addressSchema>;
+export type PackageDimensions = z.output<typeof packageDimensionsSchema>;
+export type RateRequest = z.output<typeof rateRequestSchema>;
+export type RateRequestInput = z.input<typeof rateRequestSchema>;
