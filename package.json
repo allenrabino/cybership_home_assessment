@@ -1,0 +1,32 @@
+{
+  "name": "carrier-integration-service",
+  "version": "0.1.0",
+  "description": "Shipping carrier integration service — UPS Rating API wrapper with extensible carrier support",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "npx tsx --watch src/index.ts",
+    "start": "node dist/index.js",
+    "start:dev": "npx tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit && vitest run"
+  },
+  "keywords": ["shipping", "carrier", "ups", "rates"],
+  "author": "allen",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "~5.5.0",
+    "vitest": "^2.0.0",
+    "tsx": "^3.12.7"
+  }
+}
